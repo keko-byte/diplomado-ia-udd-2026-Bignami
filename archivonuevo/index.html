@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AMP-2000 Retro Media Player</title>
+  <!-- Google Fonts: VT323 & Press Start 2P & Share Tech Mono for ultra-retro vibe -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Share+Tech+Mono&family=VT323&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="retro-window" id="app-window">
+    
+    <!-- RETRO TITLE BAR (Windows 2000 / XP Skeuomorphic Style) -->
+    <div class="title-bar">
+      <div class="title-bar-text">
+        <span class="icon-disc">💿</span>
+        <span class="app-name">AMP-2000 PRO CLASSIC // YT & SHAZAM</span>
+      </div>
+      <div class="title-bar-controls">
+        <button id="btn-pin" title="Siempre Visible" class="btn-title-opt">📌</button>
+        <button id="btn-minimize" title="Minimizar" class="btn-title-opt">_</button>
+        <button id="btn-close" title="Cerrar" class="btn-title-opt btn-close-red">✕</button>
+      </div>
+    </div>
+
+    <!-- MAIN PLAYER BODY -->
+    <div class="player-body">
+
+      <!-- TOP LCD DISPLAY DECK -->
+      <div class="lcd-screen-container">
+        <div class="lcd-screen" id="lcd-screen">
+          <div class="lcd-header">
+            <span class="lcd-badge" id="lcd-status-badge">READY</span>
+            <span class="lcd-badge badge-cyan" id="lcd-audio-format">STEREO 44.1kHz</span>
+            <span class="lcd-badge badge-green" id="lcd-kbps">320 KBPS</span>
+            <span class="lcd-badge badge-yellow" id="lcd-eq-mode">EQ: POP</span>
+          </div>
+
+          <div class="lcd-marquee-wrapper">
+            <div class="lcd-marquee" id="lcd-marquee">
+              ♪ BIENVENIDO A AMP-2000 - REPRODUCTOR RETRO CON RECONOCIMIENTO SHAZAM & YOUTUBE ♪
+            </div>
+          </div>
+
+          <div class="lcd-mid-info">
+            <div class="lcd-artist-album" id="lcd-artist">ARTISTA: SELECCIONA O BUSCA UNA CANCIÓN</div>
+            <div class="lcd-track-num" id="lcd-track-num">TRK 01/08</div>
+          </div>
+
+          <div class="lcd-bottom-info">
+            <div class="lcd-time-display">
+              <span class="time-label">TIME</span>
+              <span class="time-digits" id="lcd-time">00:00</span>
+            </div>
+            
+            <!-- PROGRESS BAR -->
+            <div class="lcd-progress-container">
+              <input type="range" id="progress-bar" min="0" max="100" value="0" step="0.1">
+              <div class="progress-track-fill" id="progress-fill"></div>
+            </div>
+
+            <div class="lcd-time-display">
+              <span class="time-label">TOTAL</span>
+              <span class="time-digits" id="lcd-duration">00:00</span>
+            </div>
+          </div>
+
+          <!-- SHAZAM RADAR OVERLAY ANIMATION -->
+          <div class="shazam-radar-overlay" id="shazam-radar">
+            <div class="radar-circle circle-1"></div>
+            <div class="radar-circle circle-2"></div>
+            <div class="radar-circle circle-3"></div>
+            <div class="radar-text">ESCUCHANDO AUDIO DEL MICRÓFONO...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VISUALIZER & MEDIA DISPLAY PANEL -->
+      <div class="display-panel">
+        <div class="display-tabs">
+          <button class="tab-btn active" data-tab="vis-spectrum">ESPECTRO LED</button>
+          <button class="tab-btn" data-tab="vis-mascot">AUDÍFONOS 2000</button>
+          <button class="tab-btn" data-tab="vis-vinyl">VINILO CD</button>
+          <button class="tab-btn" data-tab="vis-video">PANTALLA YT</button>
+        </div>
+
+        <div class="display-viewport">
+          <!-- Spectrum Canvas -->
+          <div class="tab-view active" id="view-spectrum">
+            <canvas id="canvas-visualizer" width="440" height="130"></canvas>
+          </div>
+
+          <!-- Headphones Mascot Animation View -->
+          <div class="tab-view" id="view-mascot">
+            <div class="mascot-container">
+              <div class="mascot-head" id="mascot-head">
+                <div class="headphone-band"></div>
+                <div class="earcup earcup-left"></div>
+                <div class="earcup earcup-right"></div>
+                <div class="mascot-face">
+                  <div class="eye eye-left"></div>
+                  <div class="eye eye-right"></div>
+                  <div class="glasses"></div>
+                  <div class="mouth" id="mascot-mouth"></div>
+                </div>
+              </div>
+              <div class="mascot-soundwaves">
+                <div class="wave wave-1"></div>
+                <div class="wave wave-2"></div>
+                <div class="wave wave-3"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Vinyl CD Animation View -->
+          <div class="tab-view" id="view-vinyl">
+            <div class="cd-deck">
+              <div class="cd-disc" id="cd-disc">
+                <div class="cd-center-hole"></div>
+                <div class="cd-label">
+                  <span id="cd-label-title">AMP-2000</span>
+                </div>
+              </div>
+              <div class="laser-arm" id="laser-arm"></div>
+            </div>
+          </div>
+
+          <!-- YouTube Embedded CRT View -->
+          <div class="tab-view" id="view-video">
+            <div class="crt-screen">
+              <div id="youtube-player-container"></div>
+              <div class="crt-glass-glare"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEARCH & SHAZAM CONTROL DECK -->
+      <div class="search-shazam-deck">
+        <div class="search-box-row">
+          <input type="text" id="search-input" placeholder="🔍 Buscar canción o artista en YouTube..." value="Daft Punk One More Time">
+          <button id="btn-search" class="btn-retro btn-blue">BUSCAR</button>
+          <button id="btn-shazam" class="btn-retro btn-shazam" title="Detectar Música por Micrófono">
+            <span class="shazam-icon">⚡</span> SHAZAM
+          </button>
+        </div>
+
+        <!-- SHAZAM RESULT CARD -->
+        <div class="shazam-result-card hidden" id="shazam-card">
+          <div class="shazam-cover-box">
+            <img id="shazam-img" src="" alt="Portada">
+          </div>
+          <div class="shazam-info">
+            <div class="shazam-tag">MÚSICA DETECTADA</div>
+            <div class="shazam-title" id="shazam-title-text">-</div>
+            <div class="shazam-artist" id="shazam-artist-text">-</div>
+            <button id="btn-play-shazam" class="btn-retro btn-green btn-sm">▶ REPRODUCIR AHORA</button>
+          </div>
+          <button id="btn-close-shazam" class="btn-sm-close">✕</button>
+        </div>
+      </div>
+
+      <!-- MAIN RETRO CONTROL BUTTONS -->
+      <div class="control-buttons-deck">
+        <button id="btn-prev" class="btn-control" title="Anterior (Prev)">
+          <span class="btn-symbol">|◄◄</span>
+          <span class="btn-label">PREV</span>
+        </button>
+        <button id="btn-rewind" class="btn-control" title="Retroceder">
+          <span class="btn-symbol">◄◄</span>
+          <span class="btn-label">REW</span>
+        </button>
+        <button id="btn-play" class="btn-control btn-primary-action" title="Reproducir (Play)">
+          <span class="btn-symbol">►</span>
+          <span class="btn-label">PLAY</span>
+        </button>
+        <button id="btn-pause" class="btn-control" title="Pausa">
+          <span class="btn-symbol">❚❚</span>
+          <span class="btn-label">PAUSE</span>
+        </button>
+        <button id="btn-stop" class="btn-control" title="Detener (Stop)">
+          <span class="btn-symbol">◼</span>
+          <span class="btn-label">STOP</span>
+        </button>
+        <button id="btn-ffwd" class="btn-control" title="Adelantar">
+          <span class="btn-symbol">►►</span>
+          <span class="btn-label">FFWD</span>
+        </button>
+        <button id="btn-next" class="btn-control" title="Siguiente (Next)">
+          <span class="btn-symbol">►►|</span>
+          <span class="btn-label">NEXT</span>
+        </button>
+        <button id="btn-shuffle" class="btn-control btn-toggle" title="Aleatorio (Shuffle)">
+          <span class="btn-symbol">🔀</span>
+          <span class="btn-label">SHUFF</span>
+        </button>
+        <button id="btn-repeat" class="btn-control btn-toggle" title="Repetir (Repeat)">
+          <span class="btn-symbol">🔁</span>
+          <span class="btn-label">REPEAT</span>
+        </button>
+      </div>
+
+      <!-- VOLUME & EQUALIZER PANEL -->
+      <div class="eq-volume-deck">
+        <div class="volume-section">
+          <div class="section-title">VOLUMEN</div>
+          <div class="volume-controls">
+            <input type="range" id="volume-slider" min="0" max="100" value="80">
+            <div class="vu-meter">
+              <div class="vu-bar" id="vu-bar-l"></div>
+              <div class="vu-bar" id="vu-bar-r"></div>
+            </div>
+            <span class="vol-label" id="vol-val">80%</span>
+          </div>
+        </div>
+
+        <div class="eq-section">
+          <div class="section-title">ECUALIZADOR GRÁFICO (5 BANDAS)</div>
+          <div class="eq-presets">
+            <button class="btn-eq-preset active" data-preset="FLAT">FLAT</button>
+            <button class="btn-eq-preset" data-preset="ROCK">ROCK</button>
+            <button class="btn-eq-preset" data-preset="POP">POP</button>
+            <button class="btn-eq-preset" data-preset="TECHNO">TECHNO</button>
+            <button class="btn-eq-preset" data-preset="BASS">BASS</button>
+          </div>
+          <div class="eq-sliders">
+            <div class="eq-band">
+              <input type="range" class="eq-slider" data-band="0" min="-12" max="12" value="0" orient="vertical">
+              <span>60Hz</span>
+            </div>
+            <div class="eq-band">
+              <input type="range" class="eq-slider" data-band="1" min="-12" max="12" value="0" orient="vertical">
+              <span>310Hz</span>
+            </div>
+            <div class="eq-band">
+              <input type="range" class="eq-slider" data-band="2" min="-12" max="12" value="0" orient="vertical">
+              <span>1kHz</span>
+            </div>
+            <div class="eq-band">
+              <input type="range" class="eq-slider" data-band="3" min="-12" max="12" value="0" orient="vertical">
+              <span>3kHz</span>
+            </div>
+            <div class="eq-band">
+              <input type="range" class="eq-slider" data-band="4" min="-12" max="12" value="0" orient="vertical">
+              <span>14kHz</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PLAYLIST DRAWER / RACK -->
+      <div class="playlist-deck">
+        <div class="playlist-header">
+          <span>LISTA DE REPRODUCCIÓN (PLAYLIST)</span>
+          <div class="playlist-presets">
+            <button class="btn-preset-load" id="btn-load-2000s">Éxitos 2000s</button>
+            <button class="btn-preset-load" id="btn-load-synth">Synthwave</button>
+            <button class="btn-preset-load" id="btn-load-rock">Rock Clásico</button>
+          </div>
+        </div>
+
+        <div class="playlist-container" id="playlist-list">
+          <!-- Track items rendered dynamically -->
+        </div>
+      </div>
+
+      <!-- FOOTER STATUS & API KEY OPTION -->
+      <div class="player-footer">
+        <div class="footer-status" id="footer-msg">AMP-2000 Ready. Inicia la música o busca en YouTube.</div>
+        <button id="btn-audd-key" class="btn-footer-opt" title="Configurar Token de AudD API">🔑 API Key</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- YOUTUBE IFRAME API SCRIPT -->
+  <script src="https://www.youtube.com/iframe_api"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>

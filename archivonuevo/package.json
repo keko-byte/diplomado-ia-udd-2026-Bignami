@@ -1,0 +1,24 @@
+{
+  "name": "retro-media-player-2000s",
+  "version": "1.0.0",
+  "description": "A classic 2000s skeuomorphic retro desktop music player with YouTube integration and Audio Shazam recognition",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron ."
+  },
+  "keywords": [
+    "retro",
+    "winamp",
+    "wmp",
+    "music-player",
+    "electron",
+    "youtube",
+    "shazam"
+  ],
+  "author": "Antigravity",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^28.2.0"
+  }
+}
